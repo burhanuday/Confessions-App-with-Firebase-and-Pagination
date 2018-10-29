@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "488368944319",
+    "firebase_url": "https://portfolioprojects-58856.firebaseio.com",
+    "project_id": "portfolioprojects-58856",
+    "storage_bucket": "portfolioprojects-58856.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:488368944319:android:cebfbfb4f4ace77c",
+        "android_client_info": {
+          "package_name": "com.burhanuday.confessionsapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "488368944319-3r38se4pf3v8unfeoeuvuvopb6jmb950.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCk0lPorVD1pfGe9JIfYHe4zrldso8SP5E"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
