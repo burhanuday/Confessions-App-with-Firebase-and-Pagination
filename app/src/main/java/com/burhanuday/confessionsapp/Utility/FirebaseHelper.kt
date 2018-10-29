@@ -22,8 +22,6 @@ class FirebaseHelper {
             .addOnFailureListener{
                 Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show()
             }
-
-
     }
 
     fun getPosts(){
