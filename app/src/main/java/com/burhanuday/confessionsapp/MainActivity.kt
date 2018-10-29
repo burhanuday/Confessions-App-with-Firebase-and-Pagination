@@ -2,6 +2,7 @@ package com.burhanuday.confessionsapp
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -12,8 +13,14 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.burhanuday.confessionsapp.Activities.PostConfession
+import com.burhanuday.confessionsapp.Models.Post
+import com.burhanuday.confessionsapp.Utility.Constants
 import com.burhanuday.confessionsapp.Utility.PaginationScrollListener
 import com.burhanuday.confessionsapp.Utility.RecyclerPaginatedAdapter
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.gms.tasks.OnSuccessListener
+import com.google.android.gms.tasks.Task
+import com.google.firebase.firestore.*
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -25,6 +32,8 @@ class MainActivity : AppCompatActivity() {
     private var TOTAL_PAGES = 3
     private var currentPage = PAGE_START
     private lateinit var adapter: RecyclerPaginatedAdapter
+    private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
+    val cr: CollectionReference = db.collection(Constants.collection).document(Constants.posts).collection(Constants.posts)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,7 +96,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadFirstPage(){
-
+        val list = getPosts(PAGE_START)
         main_progress.visibility = View.GONE
         //adapter.addAll()
         if (currentPage <= TOTAL_PAGES) adapter.addLoadingFooter()
@@ -100,5 +109,22 @@ class MainActivity : AppCompatActivity() {
         //adapter.addAll()
         if (currentPage != TOTAL_PAGES) adapter.addLoadingFooter()
         else isLastPage = true
+    }
+
+    fun getPosts(lastVisiblePosition: Int):List<Post>{
+        val query = cr.orderBy("time", Query.Direction.DESCENDING).startAt(lastVisiblePosition).limit(3)
+        val list: MutableList<Post> = ArrayList()
+        query.get()
+            .addOnCompleteListener(object : OnCompleteListener<QuerySnapshot>{
+                override fun onComplete(task: Task<QuerySnapshot>) {
+                    if (task.isSuccessful){
+                        for (document:QueryDocumentSnapshot in task.result!!){
+                            Log.i(TAG, document.data.toString())
+                        }
+                    }
+                }
+
+            })
+        return list
     }
 }

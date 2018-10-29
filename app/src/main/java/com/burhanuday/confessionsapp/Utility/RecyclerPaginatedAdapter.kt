@@ -54,8 +54,10 @@ class RecyclerPaginatedAdapter(context: Context): RecyclerView.Adapter<RecyclerV
         val post: Post = confessions[position]
         when(position){
             ITEM -> {
+                /*
                 val postVH: PostVH = holder as PostVH
                 postVH.textView.text = post.body
+                */
             }
 
             LOADING-> {}

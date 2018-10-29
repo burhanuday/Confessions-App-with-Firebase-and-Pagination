@@ -5,33 +5,35 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.burhanuday.confessionsapp.Models.Post
 import com.burhanuday.confessionsapp.R
-import com.burhanuday.confessionsapp.Utility.FirebaseHelper
+import com.burhanuday.confessionsapp.Utility.Constants
+import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_post_confession.*
-import java.text.DateFormat
-import java.text.SimpleDateFormat
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import java.util.*
 
 class PostConfession : AppCompatActivity() {
+    private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
+    val cr: CollectionReference = db.collection(Constants.collection).document(Constants.posts).collection(Constants.posts)
 
-    lateinit var firebaseHelper: FirebaseHelper
+    fun submitPost(post: Post){
+        cr.add(post)
+            .addOnSuccessListener {
+                Toast.makeText(this, "Submitted successfully", Toast.LENGTH_SHORT).show()
+            }
+            .addOnFailureListener{
+                Toast.makeText(this, "Failed", Toast.LENGTH_SHORT).show()
+            }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_post_confession)
 
-        firebaseHelper = FirebaseHelper()
-
         bt_post_confession.setOnClickListener{
             if (et_post.text.trim().isNotEmpty()){
-                val calendar: Calendar = Calendar.getInstance()
-                val date: Date = calendar.time
-                val dateFormat: DateFormat = SimpleDateFormat("HH:mm:ss")
-                val post: Post = Post(dateFormat.format(date), et_post.text.toString(), 0, 0)
-                firebaseHelper.submitPost(post, baseContext)
+                val post = Post(Constants.getTime(), et_post.text.toString(), 0, 0)
+                submitPost(post)
             }else{
-                Toast.makeText(baseContext, "Cannot post empty text", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Cannot post empty text", Toast.LENGTH_SHORT).show()
             }
         }
     }
