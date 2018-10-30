@@ -25,7 +25,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-    private val TAG:String = "MainActivity"
+    private val TAG:String = "DATAFIREBASE"
     private val PAGE_START = 0
     private var isLoading: Boolean = false
     private var isLastPage: Boolean = false
@@ -73,7 +73,6 @@ class MainActivity : AppCompatActivity() {
             }
 
         })
-
         loadFirstPage()
     }
 
@@ -98,21 +97,21 @@ class MainActivity : AppCompatActivity() {
     private fun loadFirstPage(){
         val list = getPosts(PAGE_START)
         main_progress.visibility = View.GONE
-        //adapter.addAll()
-        if (currentPage <= TOTAL_PAGES) adapter.addLoadingFooter()
-        else isLastPage = true
+        //adapter.addAll(list)
+        //if (currentPage <= TOTAL_PAGES) adapter.addLoadingFooter()
+        //else isLastPage = true
     }
 
     private fun loadNextPage(){
-        adapter.removeLoadingFooter()
+        //adapter.removeLoadingFooter()
         isLoading = false
         //adapter.addAll()
-        if (currentPage != TOTAL_PAGES) adapter.addLoadingFooter()
-        else isLastPage = true
+        //if (currentPage != TOTAL_PAGES) adapter.addLoadingFooter()
+        //else isLastPage = true
     }
 
     fun getPosts(lastVisiblePosition: Int):List<Post>{
-        val query = cr.orderBy("time", Query.Direction.DESCENDING).startAt(lastVisiblePosition).limit(3)
+        val query = cr.orderBy("time").startAt(lastVisiblePosition).limit(5)
         val list: MutableList<Post> = ArrayList()
         query.get()
             .addOnCompleteListener(object : OnCompleteListener<QuerySnapshot>{
@@ -120,11 +119,34 @@ class MainActivity : AppCompatActivity() {
                     if (task.isSuccessful){
                         for (document:QueryDocumentSnapshot in task.result!!){
                             Log.i(TAG, document.data.toString())
+                            list.add(document.toObject(Post::class.java))
                         }
+                        adapter.addAll(list)
+                        adapter.notifyDataSetChanged()
+                    }else{
+                        Log.i(TAG, "error")
                     }
                 }
 
             })
         return list
+    }
+
+    fun getAll(){
+        val listnow : MutableList<Post> = ArrayList<Post>()
+        cr.get()
+            .addOnCompleteListener(object : OnCompleteListener<QuerySnapshot>{
+                override fun onComplete(task: Task<QuerySnapshot>) {
+                    if (task.isSuccessful){
+                        for (document:QueryDocumentSnapshot in task.result!!){
+                            Log.i(TAG, document.data.toString())
+                            listnow.add(document.toObject(Post::class.java))
+                            adapter.addAll(listnow)
+                            adapter.notifyDataSetChanged()
+
+                        }
+                    }
+                }
+            })
     }
 }

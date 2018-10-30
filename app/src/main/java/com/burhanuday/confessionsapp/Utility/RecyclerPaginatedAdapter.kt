@@ -1,6 +1,7 @@
 package com.burhanuday.confessionsapp.Utility
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -52,12 +53,10 @@ class RecyclerPaginatedAdapter(context: Context): RecyclerView.Adapter<RecyclerV
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val post: Post = confessions[position]
-        when(position){
+        when(getItemViewType(position)){
             ITEM -> {
-                /*
                 val postVH: PostVH = holder as PostVH
                 postVH.textView.text = post.body
-                */
             }
 
             LOADING-> {}
@@ -94,23 +93,26 @@ class RecyclerPaginatedAdapter(context: Context): RecyclerView.Adapter<RecyclerV
             notifyItemRemoved(position)
         }
     }
-
+    /*
     fun clear(){
         isLoadingAdded = false
         while (itemCount > 0){
             remove(getItem(0))
         }
     }
+    */
 
     fun isEmpty(): Boolean{
         return itemCount == 0
     }
 
+    /*
     fun addLoadingFooter(){
         isLoadingAdded = true
         add(Post())
     }
-
+    */
+    /*
     fun removeLoadingFooter(){
         isLoadingAdded = false
         val position = confessions.size - 1
@@ -120,6 +122,7 @@ class RecyclerPaginatedAdapter(context: Context): RecyclerView.Adapter<RecyclerV
             notifyItemRemoved(position)
         }
     }
+    */
 
     fun getItem(position: Int): Post{
         return confessions[position]
